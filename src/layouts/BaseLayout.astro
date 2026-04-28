@@ -1,6 +1,7 @@
 ---
-import { route } from "../routes/route_registry";
-import type { Locale } from "../routes/locales";
+import '../styles/global.css';
+import { route } from '../routes/route_registry';
+import type { Locale } from '../routes/locales';
 
 type Props = {
   title: string;
@@ -21,23 +22,27 @@ const { title, description, locale } = Astro.props;
   </head>
 
   <body>
-    <header>
-      <a href={route("home", locale)}>Bezotcorp</a>
+    <header class="site-header">
+      <div class="site-header-inner">
+        <a class="brand" href={route('home', locale)}>Bezotcorp</a>
 
-      <nav aria-label="Navigation principale">
-        <a href={route("about", locale)}>À propos</a>
-        <a href={route("projects", locale)}>Projets</a>
-        <a href={route("blog", locale)}>Blog</a>
-        <a href={route("contact", locale)}>Contact</a>
-      </nav>
+        <nav class="nav" aria-label="Navigation principale">
+          <a href={route('about', locale)}>À propos</a>
+          <a href={route('projects', locale)}>Projets</a>
+          <a href={route('blog', locale)}>Blog</a>
+          <a href={route('contact', locale)}>Contact</a>
+        </nav>
+      </div>
     </header>
 
-    <main>
+    <main class="page">
       <slot />
     </main>
 
-    <footer>
-      <p>© 2026 Bezotcorp.</p>
+    <footer class="site-footer">
+      <div class="site-footer-inner">
+        <p>© 2026 Bezotcorp.</p>
+      </div>
     </footer>
   </body>
 </html>
