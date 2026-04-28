@@ -2,14 +2,21 @@
 import '../styles/global.css';
 import { route } from '../routes/route_registry';
 import type { Locale } from '../routes/locales';
+import { getCanonical, getAlternateLinks } from '../routes/seo';
+import type { RouteKey } from '../routes/route_keys';
+import { hreflangByLocale } from '../routes/seo';
 
 type Props = {
   title: string;
   description: string;
   locale: Locale;
+  routeKey: RouteKey;
 };
 
-const { title, description, locale } = Astro.props;
+const { title, description, locale, routeKey } = Astro.props;
+
+const canonical = getCanonical(routeKey, locale);
+const alternates = getAlternateLinks(routeKey, ['fr-fr']);
 ---
 
 <!doctype html>
@@ -19,6 +26,21 @@ const { title, description, locale } = Astro.props;
     <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width" />
     <title>{title}</title>
+
+    <link rel="canonical" href={canonical} />
+
+    {alternates.map((alt) => <link rel="alternate" hreflang={alt.hreflang} href={alt.url} />)}
+
+    <link rel="alternate" hreflang="x-default" href={canonical} />
+
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
   </head>
 
   <body>
