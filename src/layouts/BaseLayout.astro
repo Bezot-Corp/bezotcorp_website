@@ -1,0 +1,43 @@
+---
+import { route } from "../routes/route_registry";
+import type { Locale } from "../routes/locales";
+
+type Props = {
+  title: string;
+  description: string;
+  locale: Locale;
+};
+
+const { title, description, locale } = Astro.props;
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width" />
+    <title>{title}</title>
+  </head>
+
+  <body>
+    <header>
+      <a href={route("home", locale)}>Bezotcorp</a>
+
+      <nav aria-label="Navigation principale">
+        <a href={route("about", locale)}>À propos</a>
+        <a href={route("projects", locale)}>Projets</a>
+        <a href={route("blog", locale)}>Blog</a>
+        <a href={route("contact", locale)}>Contact</a>
+      </nav>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer>
+      <p>© 2026 Bezotcorp.</p>
+    </footer>
+  </body>
+</html>
