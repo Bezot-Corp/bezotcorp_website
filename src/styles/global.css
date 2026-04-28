@@ -16,6 +16,24 @@
     sans-serif;
 }
 
+:root[data-theme='light'] {
+  --background: #ffffff;
+  --surface: #f4f4f5;
+  --text: #111827;
+  --muted: #52525b;
+  --border: #e4e4e7;
+  --accent: #0369a1;
+}
+
+:root[data-theme='dark'] {
+  --background: #0f1115;
+  --surface: #171a21;
+  --text: #f4f4f5;
+  --muted: #a1a1aa;
+  --border: #2a2f3a;
+  --accent: #7dd3fc;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -104,4 +122,49 @@ p {
 .site-footer-inner {
   padding: 24px 0;
   color: var(--muted);
+}
+
+.theme-toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.theme-toggle:hover {
+  color: var(--accent);
+}
+
+.empty-state {
+  margin-top: 40px;
+  padding: 24px;
+  border: 1px dashed var(--border);
+  border-radius: 18px;
+  background: var(--surface);
+}
+
+.empty-state h2 {
+  margin-top: 0;
+}
+
+.post-list {
+  display: grid;
+  gap: 24px;
+  margin-top: 40px;
+}
+
+.post-card {
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--surface);
+}
+
+.post-card h2 {
+  margin-top: 0;
 }

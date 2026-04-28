@@ -1,0 +1,65 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Contact — Bezotcorp | Logiciels, automatisation et IA"
+  description="Contactez Bezotcorp pour une question, une collaboration technique, un projet logiciel, de l’automatisation, Rust ou l’intelligence artificielle."
+  locale="fr-fr"
+  routeKey="contact"
+>
+  <section class="content-section">
+    <p class="eyebrow">Contact</p>
+
+    <h1>Contacter Bezotcorp</h1>
+
+    <p>
+      Pour une question, une collaboration technique ou un échange autour du
+      développement logiciel, de l’automatisation, de Rust ou de l’intelligence
+      artificielle, vous pouvez me contacter par email.
+    </p>
+
+    <div class="contact-card">
+      <h2>Email</h2>
+
+      <p>
+        Adresse de contact :
+        <span
+          id="contact-email"
+          data-user="contact"
+          data-domain="bezotcorp.com"
+        >
+          contact [at] bezotcorp [dot] com
+        </span>
+      </p>
+    </div>
+
+    <h2>Types de demandes</h2>
+
+    <ul>
+      <li>Développement logiciel et architecture technique</li>
+      <li>Automatisation d’outils, scripts et workflows</li>
+      <li>Projets autour de Rust, de l’IA et des systèmes hybrides</li>
+      <li>Collaboration, contribution ou échange technique</li>
+    </ul>
+  </section>
+
+  <script is:inline>
+    const target = document.getElementById("contact-email");
+
+    if (target) {
+      const user = target.dataset.user;
+      const domain = target.dataset.domain;
+
+      if (user && domain) {
+        const email = `${user}@${domain}`;
+        const link = document.createElement("a");
+
+        link.href = `mailto:${email}`;
+        link.textContent = email;
+
+        target.replaceChildren(link);
+      }
+    }
+  </script>
+</BaseLayout>

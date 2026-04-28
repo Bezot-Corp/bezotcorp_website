@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+interface Post {
+  id: string;
+  title: string;
+  description: string;
+}
+
+const posts: Post[] = [];
+---
+
+<BaseLayout
+  title="Blog — Bezotcorp | Rust, automatisation et intelligence artificielle"
+  description="Articles de Bezotcorp sur le développement logiciel, Rust, l’automatisation, les outils développeur et l’intelligence artificielle."
+  locale="fr-fr"
+  routeKey="blog"
+>
+  <section class="content-section">
+    <p class="eyebrow">Blog</p>
+
+    <h1>Articles techniques, notes et retours d’expérience</h1>
+
+    <p>
+      Le blog Bezotcorp regroupera des articles autour du développement logiciel, de Rust, de l’automatisation, de
+      l’intelligence artificielle, des outils développeur et de la construction de systèmes logiciels durables.
+    </p>
+
+    {
+      posts.length === 0 ? (
+        <div class="empty-state">
+          <h2>Aucun article publié pour le moment</h2>
+          <p>
+            Les premiers articles arriveront progressivement avec les projets, expérimentations et retours d’expérience
+            techniques.
+          </p>
+        </div>
+      ) : (
+        <section class="post-list" aria-label="Liste des articles">
+          {posts.map((post) => (
+            <article class="post-card">
+              <h2>{post.title}</h2>
+              <p>{post.description}</p>
+            </article>
+          ))}
+        </section>
+      )
+    }
+  </section>
+</BaseLayout>

@@ -1,17 +1,18 @@
 ---
 import '../styles/global.css';
-import { route } from '../routes/route_registry';
-import type { Locale } from '../routes/locales';
-import { getCanonical, getAlternateLinks } from '../routes/seo';
-import type { RouteKey } from '../routes/route_keys';
-import { hreflangByLocale } from '../routes/seo';
 
-type Props = {
+import { route } from '../routes/route_registry';
+import { getAlternateLinks, getCanonical } from '../routes/seo';
+
+import type { Locale } from '../routes/locales';
+import type { RouteKey } from '../routes/route_keys';
+
+interface Props {
   title: string;
   description: string;
   locale: Locale;
   routeKey: RouteKey;
-};
+}
 
 const { title, description, locale, routeKey } = Astro.props;
 
@@ -20,16 +21,17 @@ const alternates = getAlternateLinks(routeKey, ['fr-fr']);
 ---
 
 <!doctype html>
-<html lang={locale}>
+<html lang={locale} data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
     <title>{title}</title>
 
     <link rel="canonical" href={canonical} />
 
-    {alternates.map((alt) => <link rel="alternate" hreflang={alt.hreflang} href={alt.url} />)}
+    {alternates.map((alternate) => <link rel="alternate" hreflang={alternate.hreflang} href={alternate.url} />)}
 
     <link rel="alternate" hreflang="x-default" href={canonical} />
 
@@ -41,6 +43,22 @@ const alternates = getAlternateLinks(routeKey, ['fr-fr']);
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
+
+    <script is:inline>
+      const savedTheme = localStorage.getItem('theme');
+      const preferredTheme =
+        savedTheme ?? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
+      document.documentElement.dataset.theme = preferredTheme;
+
+      window.toggleTheme = () => {
+        const currentTheme = document.documentElement.dataset.theme;
+        const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+        document.documentElement.dataset.theme = nextTheme;
+        localStorage.setItem('theme', nextTheme);
+      };
+    </script>
   </head>
 
   <body>
@@ -66,5 +84,7 @@ const alternates = getAlternateLinks(routeKey, ['fr-fr']);
         <p>© 2026 Bezotcorp.</p>
       </div>
     </footer>
+
+    <button class="theme-toggle" type="button" onclick="window.toggleTheme()"> Changer le thème </button>
   </body>
 </html>
