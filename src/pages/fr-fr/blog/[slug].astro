@@ -1,0 +1,49 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+const locale = 'fr-fr' as const;
+
+type BlogPost = CollectionEntry<'blog'>;
+
+interface StaticPath {
+  params: {
+    slug: string;
+  };
+  props: {
+    post: BlogPost;
+  };
+}
+
+export async function getStaticPaths(): Promise<StaticPath[]> {
+  const posts: BlogPost[] = (await getCollection('blog'))
+    .filter((post: BlogPost) => post.data.locale === locale)
+    .filter((post: BlogPost) => !post.data.draft);
+
+  return posts.map(
+    (post: BlogPost): StaticPath => ({
+      params: {
+        slug: post.slug.replace(new RegExp(`^${locale}/`), ''),
+      },
+      props: {
+        post,
+      },
+    }),
+  );
+}
+
+const { post } = Astro.props as { post: BlogPost };
+const { Content } = await render(post);
+---
+
+<BaseLayout title={`${post.data.title} — Bezotcorp`} description={post.data.description} locale="fr-fr" routeKey="blog">
+  <article class="content-section">
+    <p class="eyebrow">Blog</p>
+
+    <h1>{post.data.title}</h1>
+
+    <p>{post.data.description}</p>
+
+    <Content />
+  </article>
+</BaseLayout>
