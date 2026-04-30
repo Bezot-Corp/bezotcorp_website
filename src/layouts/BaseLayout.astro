@@ -1,0 +1,89 @@
+---
+import '../styles/global.css';
+
+import { route } from '../routes/route_registry';
+import { getAlternateLinks, getCanonical } from '../routes/seo';
+
+import type { Locale } from '../routes/locales';
+import type { RouteKey } from '../routes/route_keys';
+
+interface Props {
+  title: string;
+  description: string;
+  locale: Locale;
+  routeKey: RouteKey;
+}
+
+const { title, description, locale, routeKey } = Astro.props;
+
+const canonical = getCanonical(routeKey, locale);
+const alternates = getAlternateLinks(routeKey, ['fr-fr']);
+---
+
+<!doctype html>
+<html lang={locale} data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{title}</title>
+
+    <link rel="canonical" href={canonical} />
+
+    {alternates.map((alternate) => <link rel="alternate" hreflang={alternate.hreflang} href={alternate.url} />)}
+
+    <link rel="alternate" hreflang="x-default" href={canonical} />
+
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
+    <script is:inline>
+      const savedTheme = localStorage.getItem('theme');
+      const preferredTheme =
+        savedTheme ?? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
+      document.documentElement.dataset.theme = preferredTheme;
+
+      window.toggleTheme = () => {
+        const currentTheme = document.documentElement.dataset.theme;
+        const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+        document.documentElement.dataset.theme = nextTheme;
+        localStorage.setItem('theme', nextTheme);
+      };
+    </script>
+  </head>
+
+  <body>
+    <header class="site-header">
+      <div class="site-header-inner">
+        <a class="brand" href={route('home', locale)}>Bezotcorp</a>
+
+        <nav class="nav" aria-label="Navigation principale">
+          <a href={route('about', locale)}>À propos</a>
+          <a href={route('projects', locale)}>Projets</a>
+          <a href={route('contact', locale)}>Contact</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="page">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer-inner">
+        <p>© 2026 Bezotcorp.</p>
+      </div>
+    </footer>
+
+    <button class="theme-toggle" type="button" onclick="window.toggleTheme()"> Changer le thème </button>
+  </body>
+</html>
