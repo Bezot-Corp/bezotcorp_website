@@ -1,13 +1,32 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
 
-interface Post {
+const locale = 'fr-fr' as const;
+
+type BlogPost = CollectionEntry<'blog'>;
+
+interface BlogPostListItem {
   id: string;
+  slug: string;
   title: string;
   description: string;
+  pubDate: Date;
 }
 
-const posts: Post[] = [];
+const posts: BlogPostListItem[] = (await getCollection('blog'))
+  .filter((post: BlogPost) => post.data.locale === locale)
+  .filter((post: BlogPost) => !post.data.draft)
+  .map(
+    (post: BlogPost): BlogPostListItem => ({
+      id: post.id,
+      slug: post.slug.replace(`${locale}/`, ''),
+      title: post.data.title,
+      description: post.data.description,
+      pubDate: post.data.pubDate,
+    }),
+  )
+  .sort((a: BlogPostListItem, b: BlogPostListItem) => b.pubDate.valueOf() - a.pubDate.valueOf());
 ---
 
 <BaseLayout
@@ -37,9 +56,11 @@ const posts: Post[] = [];
         </div>
       ) : (
         <section class="post-list" aria-label="Liste des articles">
-          {posts.map((post) => (
+          {posts.map((post: BlogPostListItem) => (
             <article class="post-card">
-              <h2>{post.title}</h2>
+              <h2>
+                <a href={`/fr-fr/blog/${post.slug}`}>{post.title}</a>
+              </h2>
               <p>{post.description}</p>
             </article>
           ))}
